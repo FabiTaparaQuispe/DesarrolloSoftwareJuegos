@@ -141,7 +141,7 @@ while running:
     elif playerX >= 736:
         playerX = 736
 
-    # Enemy Movement
+ # Enemy Movement y detección de colisiones
     for i in range(num_of_enemies):
 
         # Game Over
@@ -149,6 +149,7 @@ while running:
             for j in range(num_of_enemies):
                 enemyY[j] = 2000
             game_over_text()
+            running = False  # Detén el juego aquí si es necesario
             break
 
         enemyX[i] += enemyX_change[i]
@@ -159,10 +160,10 @@ while running:
             enemyX_change[i] = -4
             enemyY[i] += enemyY_change[i]
 
-        # Collision
+        # Collision detection
         collision = isCollision(enemyX[i], enemyY[i], bulletX, bulletY)
         if collision:
-            explosionSound = mixer.Sound("explosion.wav")
+            explosionSound = mixer.Sound(os.path.join(ASSETS_FOLDER, "explosion.wav"))
             explosionSound.play()
             bulletY = 480
             bullet_state = "ready"
@@ -170,7 +171,7 @@ while running:
             enemyX[i] = random.randint(0, 736)
             enemyY[i] = random.randint(50, 150)
 
-        enemy(enemyX[i], enemyY[i], i)
+        enemy(enemyX[i], enemyY[i], i) 
 
     # Bullet Movement
     if bulletY <= 0:
