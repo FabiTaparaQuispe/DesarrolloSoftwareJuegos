@@ -61,6 +61,7 @@ bullet_state = "ready"
 # Score
 
 score_value = 0
+difficult_value = 0
 font = pygame.font.Font('freesansbold.ttf', 32)
 
 textX = 10
@@ -74,25 +75,20 @@ def show_score(x, y):
     score = font.render("Score : " + str(score_value), True, (255, 255, 255))
     screen.blit(score, (x, y))
 
-
 def game_over_text():
     over_text = over_font.render("GAME OVER", True, (255, 255, 255))
     screen.blit(over_text, (200, 250))
 
-
 def player(x, y):
     screen.blit(playerImg, (x, y))
 
-
 def enemy(x, y, i):
     screen.blit(enemyImg[i], (x, y))
-
 
 def fire_bullet(x, y):
     global bullet_state
     bullet_state = "fire"
     screen.blit(bulletImg, (x + 16, y + 10))
-
 
 def isCollision(enemyX, enemyY, bulletX, bulletY):
     distance = math.sqrt(math.pow(enemyX - bulletX, 2) + (math.pow(enemyY - bulletY, 2)))
@@ -101,6 +97,18 @@ def isCollision(enemyX, enemyY, bulletX, bulletY):
     else:
         return False
 
+def increase_difficult():
+    global difficult_value
+    if score_value % 5 == 0:
+        difficult_value += 1
+
+def show_score(x, y):
+    score = font.render("Score : " + str(score_value), True, (255, 255, 255))
+    screen.blit(score, (x, y))
+
+def show_difficult(x, y):
+    score = font.render("Difficult : " + str(difficult_value), True, (255, 255, 255))
+    screen.blit(score, (x, y))
 
 # Game Loop
 running = True
@@ -153,11 +161,12 @@ while running:
             break
 
         enemyX[i] += enemyX_change[i]
+        speed = 4+difficult_value*.2
         if enemyX[i] <= 0:
-            enemyX_change[i] = 4
+            enemyX_change[i] = speed
             enemyY[i] += enemyY_change[i]
         elif enemyX[i] >= 736:
-            enemyX_change[i] = -4
+            enemyX_change[i] = -1*speed
             enemyY[i] += enemyY_change[i]
 
         # Collision detection
@@ -168,6 +177,7 @@ while running:
             bulletY = 480
             bullet_state = "ready"
             score_value += 1
+            increase_difficult()
             enemyX[i] = random.randint(0, 736)
             enemyY[i] = random.randint(50, 150)
 
@@ -184,9 +194,5 @@ while running:
 
     player(playerX, playerY)
     show_score(textX, testY)
+    show_difficult(300, testY)
     pygame.display.update()
-
-def incrementarVelocidad():
-    if score_value % 10 == 0 and score_value > 0:
-        for i in range(num_of_enemies):
-            enemyX_change[i] += 0.2  # Incrementa la velocidad de los enemigos
