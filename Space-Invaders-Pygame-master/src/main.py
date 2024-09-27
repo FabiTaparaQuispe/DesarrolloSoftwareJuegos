@@ -5,7 +5,7 @@ import os
 import pygame
 from pygame import mixer
 
-ASSETS_FOLDER = "assets/"
+ASSETS_FOLDER = "src/assets/"
 
 # Intialize the pygame
 pygame.init()
@@ -185,3 +185,8 @@ while running:
     player(playerX, playerY)
     show_score(textX, testY)
     pygame.display.update()
+
+def incrementarVelocidad():
+    if score_value % 10 == 0 and score_value > 0:
+        for i in range(num_of_enemies):
+            enemyX_change[i] += 0.2  # Incrementa la velocidad de los enemigos
